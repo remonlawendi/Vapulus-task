@@ -1,0 +1,46 @@
+<div class="container">
+  <!-- Search form -->
+  <div class="row">
+    <a
+      [routerLink]="['/contacts/create']"
+      class="btn btn-secondary btn-lg btn-block my-21"
+    >
+      ADD CONTACT
+      <i class="fas fa-plus"></i>
+    </a>
+
+    <input
+      class="form-control col-md-12 my-2"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+      #seachInputElement
+    />
+  </div>
+
+  <!-- contacts card -->
+
+  <div class="row">
+    <div class="col-12 height-50vh scroll-y py-3">
+      <ng-container *ngIf="sortedContactsDictionary">
+        <ng-container
+          *ngFor="let alphabet of ObjectKeys(sortedContactsDictionary)"
+        >
+          <ng-container
+            *ngIf="
+              sortedContactsDictionary[alphabet] &&
+              sortedContactsDictionary[alphabet].length
+            "
+          >
+            <label class="h5">{{ alphabet }}</label>
+            <ng-container
+              *ngFor="let contact of sortedContactsDictionary[alphabet]"
+            >
+              <ct-contact-item [contact]="contact"> </ct-contact-item>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>

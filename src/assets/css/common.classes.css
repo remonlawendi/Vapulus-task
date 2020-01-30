@@ -1,0 +1,8 @@
+.height-50vh {
+  height: 50vh;
+}
+
+.scroll-y {
+  overflow-y: scroll;
+  overflow-x: auto;
+}
