@@ -1,23 +1,28 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
-import { Contact } from "../models/Contact.model";
-import { ContactService } from "../core/services/contact.service";
-import { tap, map, debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { genCharArray } from "../utils/functions/generate-alphabet.function";
-import { fromEvent } from "rxjs";
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Contact } from '../models/Contact.model';
+import { ContactService } from '../core/services/contact.service';
+import { tap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { genCharArray } from '../utils/functions/generate-alphabet.function';
+import { fromEvent, Observable } from 'rxjs';
 
 @Component({
-  selector: "app-contact-list",
-  templateUrl: "./contact-list.component.html",
-  styleUrls: ["./contact-list.component.css"]
+  selector: 'app-contact-list',
+  templateUrl: './contact-list.component.html',
+  styleUrls: ['./contact-list.component.css']
 })
 export class ContactListComponent implements OnInit {
-  @ViewChild("seachInputElement", { static: true })
+  alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+  @ViewChild('scrollableContainer', { static: true })
+  scrollableContainer: ElementRef<HTMLDivElement>;
+
+  @ViewChild('seachInputElement', { static: true })
   searchInputElement: ElementRef<HTMLInputElement>;
 
   contacts: Contact[];
   private _clonedContacts: Contact[];
   sortedContactsDictionary: { [key: string]: Contact[] } = {};
-
+  recentContacts: Observable<Contact[]> = this._contactService.getRecentContacts();
   constructor(private readonly _contactService: ContactService) {}
 
   ngOnInit() {
@@ -31,15 +36,24 @@ export class ContactListComponent implements OnInit {
     this.registerOnUserSearchEvent();
   }
 
+  scrollToLabel(char: string) {
+    char = char.toLowerCase();
+    const labelInList = document.querySelector(`[data-label="${char}"]`) as HTMLLabelElement;
+    if (labelInList) {
+      const scrollTo = labelInList.offsetTop;
+      this.scrollableContainer.nativeElement.scrollTo({ behavior: 'smooth', top: scrollTo });
+    }
+  }
+
   registerOnUserSearchEvent() {
-    fromEvent(this.searchInputElement.nativeElement, "input")
+    fromEvent(this.searchInputElement.nativeElement, 'input')
       .pipe(
         map((e: Event) => <HTMLInputElement>e.target),
         map(input =>
           input.value
             .toLowerCase()
             .trim()
-            .replace(" ", "")
+            .replace(' ', '')
         ),
         debounceTime(300),
         distinctUntilChanged()
@@ -54,9 +68,9 @@ export class ContactListComponent implements OnInit {
       return;
     }
     this.contacts = this._clonedContacts.filter(contact =>
-      (contact.firstName.toLowerCase() + contact.lastName.toLowerCase())
+      (contact.lastName ? contact.firstName.toLowerCase() + contact.lastName.toLowerCase() : contact.firstName.toLowerCase())
 
-        .replace(" ", "")
+        .replace(' ', '')
         .includes(searchTerm)
     );
     this._updateSortedDictionary();
@@ -68,15 +82,18 @@ export class ContactListComponent implements OnInit {
   }
 
   private _getAllAplhabet(): Array<string> {
-    return genCharArray("a", "z");
+    return genCharArray('a', 'z');
   }
   private _buildSortedContactsDictionary() {
     const alphabets = this._getAllAplhabet();
     alphabets.reduce(
       (currentState, alphabet, i, self) => {
-        for (let contact of this.contacts) {
+        for (const contact of this.contacts) {
           // get first character form contact firstname
-          const [firstChar] = contact.firstName.split("");
+          let firstChar: string;
+          if (contact.firstName) {
+            [firstChar] = contact.firstName.split('');
+          }
           // build our array per current alphabet
           // dictionary = { 'a' : [], 'b': [], 'c': [] }
           if (!this.sortedContactsDictionary[alphabet]) {
@@ -84,7 +101,7 @@ export class ContactListComponent implements OnInit {
           }
           // push contact in correct array.
           // dictionary['a'] = [Contact, Contact, ...etc].
-          if (alphabet == firstChar.toLowerCase()) {
+          if (alphabet === firstChar.toLowerCase()) {
             this.sortedContactsDictionary[alphabet].push(contact);
           }
         }

@@ -1,27 +1,53 @@
-<div class="container">
-  <!-- Search form -->
-  <div class="row">
-    <a
-      [routerLink]="['/contacts/create']"
-      class="btn btn-secondary btn-lg btn-block my-21"
-    >
-      ADD CONTACT
-      <i class="fas fa-plus"></i>
-    </a>
 
+
+  <div class="contact-list-content position-relative" #scrollableContainer>
+     <!--start Search form -->
+  <div class="contact-input-search">
     <input
-      class="form-control col-md-12 my-2"
-      type="search"
-      placeholder="Search"
-      aria-label="Search"
-      #seachInputElement
-    />
+    class="form-control col-md-12 my-2"
+    type="search"
+    placeholder="Search"
+    aria-label="Search"
+    #seachInputElement
+  />
+
   </div>
+    <!--end Search form -->
+
+    <!-- start add contact Section -->
+  <div class="add-contact">
+  <ul>
+    <li><span>Add New Contacts</span></li>
+    <li><a [routerLink]="['/contacts/create']" ><img src="../../assets/img/plus.svg" alt="" width="20" height="20"></a></li>
+  </ul>
+
+  </div>
+    <!-- End add contact Section -->
+
+    <!-- start recent contact  Section -->
+    <div class="recent-contact">
+      <div class="recent-contact-title">
+        <span>Recent Contact</span>
+      </div>
+      <ng-container *ngFor="let contact of recentContacts | async">
+        <div  class="recent-contact-data">
+          <img [src]="contact.image" alt="">
+          <div class="recent-contact-info-data">
+            <span class="contact-name">
+              {{ !contact.lastName ? contact.firstName : contact.firstName + ' ' + contact.lastName}}
+            </span>
+            <br>
+            <span class="contact-phone">{{ contact.mobileNumber }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <!-- start recent contact  Section -->
 
   <!-- contacts card -->
 
-  <div class="row">
-    <div class="col-12 height-50vh scroll-y py-3">
+  <div class="contact-list d-flex">
+    <div class="contact-list-data">
       <ng-container *ngIf="sortedContactsDictionary">
         <ng-container
           *ngFor="let alphabet of ObjectKeys(sortedContactsDictionary)"
@@ -32,7 +58,7 @@
               sortedContactsDictionary[alphabet].length
             "
           >
-            <label class="h5">{{ alphabet }}</label>
+            <label class="contact-label" [attr.data-label]="alphabet">{{ alphabet | uppercase }}</label>
             <ng-container
               *ngFor="let contact of sortedContactsDictionary[alphabet]"
             >
@@ -42,5 +68,12 @@
         </ng-container>
       </ng-container>
     </div>
+    <div class="contact-list-alphbet">
+      <span *ngFor="let char of alphabet" (click)="scrollToLabel(char)">
+        {{ char | uppercase }}
+      </span>
+    </div>
   </div>
+
 </div>
+

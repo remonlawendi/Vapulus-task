@@ -3,7 +3,7 @@ export function getBase64FromFile(file: File): Promise<string> {
     const fileReader = new FileReader();
 
     fileReader.readAsDataURL(file);
-    fileReader.addEventListener("load", e =>
+    fileReader.addEventListener('load', e =>
       resolve(<string>(e.target as FileReader).result)
     );
   });

@@ -1,27 +1,16 @@
-<div class="card card-default my-2">
-  <ul class="list-group pull-down">
-    <li class="list-group-item">
-      <div class="row">
-        <div class="col-md-3 ">
+<div class="contacts-list-data">
           <img
-            [src]="
-              contact.imageSrc
-                ? contact.imageSrc
-                : '../../assets/facebook-anonymous-app.jpg'
-            "
-            class="imgs"
+            [src]="contact.image ? contact.image : '../../assets/facebook-anonymous-app.jpg'"
+
           />
-        </div>
-        <div class="col-md-7 ">
-          <span class="parg "
+
+        <div class="contacts-list-info">
+          <span class="contact-name "
             >{{ contact?.firstName }} {{ contact?.lastName }}</span
           ><br />
-          <span class="parg "> {{ contact?.mobileNumber }} </span><br />
-          <span class="parg ">
+          <span class="contact-phone "> {{ contact?.email }} </span><br />
+          <!-- <span class="parg ">
             {{ contact?.email }}
-          </span>
+          </span> -->
         </div>
-      </div>
-    </li>
-  </ul>
 </div>

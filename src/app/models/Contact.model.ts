@@ -3,7 +3,7 @@ export class Contact {
   email: string;
   firstName: string;
   lastName: string;
-  imageSrc: string;
+  image: string;
   mobileNumber: number;
   countryCode: number;
 }
