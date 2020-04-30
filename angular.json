@@ -76,7 +76,8 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "baseHref": "Vapulus-task"
             }
           }
         },
